@@ -1,0 +1,12 @@
+{
+  "name": "aprender-integrales",
+  "version": "1.0.0",
+  "description": "Plataforma interactiva para aprender integrales de cálculo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
+  }
+}

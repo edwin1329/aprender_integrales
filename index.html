@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aprende Integrales</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        packages: { '[+]': ['color'] }
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════ NAVEGACIÓN ═══════════════ -->
+<header class="navbar">
+  <div class="nav-brand">
+    <span class="nav-icon">∫</span>
+    <span class="nav-title">Aprende Integrales</span>
+  </div>
+  <nav>
+    <a class="nav-link active" data-page="home">Inicio</a>
+    <a class="nav-link" data-page="teoria">Teoría</a>
+    <a class="nav-link" data-page="ejercicios">Ejercicios</a>
+    <a class="nav-link nav-game" data-page="juego">🎮 Juego</a>
+  </nav>
+</header>
+
+<!-- ═══════════════ INICIO ═══════════════ -->
+<section id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-content">
+      <p class="hero-label">Cálculo II · Semestre 3</p>
+      <h1 class="hero-title">Domina las<br><span class="gradient-text">Integrales</span></h1>
+      <p class="hero-sub">
+        Aprende desde los conceptos básicos hasta ejercicios interactivos.<br>
+        Compite con tus compañeros en tiempo real y gana puntos.
+      </p>
+      <div class="hero-btns">
+        <button class="btn btn-primary" onclick="goTo('teoria')">Empezar a aprender</button>
+        <button class="btn btn-outline" onclick="goTo('juego')">Ir al juego →</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg viewBox="0 0 320 240" class="integral-svg">
+        <defs>
+          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6366f1" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#6366f1" stop-opacity="0.05"/>
+          </linearGradient>
+          <clipPath id="areaClip">
+            <rect x="60" y="0" width="0" height="240" id="clipRect">
+              <animate attributeName="width" from="0" to="200" dur="1.8s" fill="freeze" begin="0.3s"/>
+            </rect>
+          </clipPath>
+        </defs>
+        <!-- Eje X -->
+        <line x1="40" y1="190" x2="285" y2="190" stroke="#475569" stroke-width="1.5"/>
+        <text x="288" y="194" fill="#475569" font-size="12">x</text>
+        <!-- Eje Y -->
+        <line x1="60" y1="20" x2="60" y2="200" stroke="#475569" stroke-width="1.5"/>
+        <text x="55" y="16" fill="#475569" font-size="12">y</text>
+        <!-- Área bajo la curva -->
+        <path d="M60,190 C80,190 100,50 130,40 C160,30 190,60 210,80 C230,100 250,140 260,190 Z"
+              fill="url(#areaGrad)" clip-path="url(#areaClip)"/>
+        <!-- Curva -->
+        <path d="M60,190 C80,190 100,50 130,40 C160,30 190,60 210,80 C230,100 250,140 260,190"
+              fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Etiqueta integral -->
+        <text x="120" y="130" fill="#a5b4fc" font-size="22" font-family="serif">∫</text>
+        <text x="140" y="125" fill="#c7d2fe" font-size="11">b</text>
+        <text x="115" y="145" fill="#c7d2fe" font-size="11">a</text>
+        <text x="148" y="133" fill="#e2e8f0" font-size="11">f(x) dx</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tarjetas de características -->
+  <div class="features">
+    <div class="feature-card" onclick="goTo('teoria')">
+      <div class="feature-icon">📖</div>
+      <h3>Teoría Clara</h3>
+      <p>Concepto de integral, reglas básicas y tabla de integrales comunes explicadas paso a paso.</p>
+      <span class="feature-link">Ver teoría →</span>
+    </div>
+    <div class="feature-card" onclick="goTo('ejercicios')">
+      <div class="feature-icon">✏️</div>
+      <h3>Ejercicios</h3>
+      <p>Practica con 5 ejercicios seleccionados, pistas y soluciones detalladas disponibles.</p>
+      <span class="feature-link">Practicar →</span>
+    </div>
+    <div class="feature-card highlight-card" onclick="goTo('juego')">
+      <div class="feature-icon">🏆</div>
+      <h3>Juego Multijugador</h3>
+      <p>Conecta con tus compañeros, responde 5 preguntas en tiempo real y gana puntos por velocidad.</p>
+      <span class="feature-link">Jugar ahora →</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TEORÍA ═══════════════ -->
+<section id="page-teoria" class="page">
+  <div class="page-header">
+    <h2>Teoría de Integrales</h2>
+    <p>Fundamentos esenciales para entender el cálculo integral</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" data-tab="concepto">Concepto</button>
+    <button class="tab" data-tab="indefinida">Indefinida</button>
+    <button class="tab" data-tab="definida">Definida</button>
+    <button class="tab" data-tab="reglas">Reglas y Tabla</button>
+  </div>
+
+  <!-- Tab: Concepto -->
+  <div id="tab-concepto" class="tab-content active">
+    <div class="theory-block">
+      <h3>¿Qué es una integral?</h3>
+      <p>La integral es una de las dos operaciones fundamentales del cálculo (junto con la derivada). Intuitivamente, representa el <strong>área bajo una curva</strong> en un intervalo dado.</p>
+      <div class="info-box">
+        <span class="info-icon">💡</span>
+        <p>Si \(f(x)\) describe la velocidad de un objeto en el tiempo, entonces su integral \(\int f(x)\,dx\) describe la distancia recorrida.</p>
+      </div>
+      <h3>Dos tipos principales</h3>
+      <div class="two-col">
+        <div class="concept-card">
+          <h4>Integral Indefinida</h4>
+          <p>Encuentra la familia de funciones cuya derivada es \(f(x)\). El resultado incluye siempre una constante \(C\).</p>
+          <div class="formula-box">\[\int f(x)\,dx = F(x) + C\]</div>
+        </div>
+        <div class="concept-card">
+          <h4>Integral Definida</h4>
+          <p>Calcula el área neta bajo \(f(x)\) entre dos límites \(a\) y \(b\). El resultado es un número real.</p>
+          <div class="formula-box">\[\int_a^b f(x)\,dx = F(b) - F(a)\]</div>
+        </div>
+      </div>
+      <h3>Teorema Fundamental del Cálculo</h3>
+      <p>Este teorema conecta la derivada con la integral: si \(F'(x) = f(x)\), entonces:</p>
+      <div class="formula-box">
+        \[\int_a^b f(x)\,dx = F(b) - F(a)\]
+      </div>
+      <p>Esto nos permite evaluar integrales definidas calculando primero la antiderivada.</p>
+    </div>
+  </div>
+
+  <!-- Tab: Indefinida -->
+  <div id="tab-indefinida" class="tab-content">
+    <div class="theory-block">
+      <h3>Integral Indefinida</h3>
+      <p>La integral indefinida de \(f(x)\) es el conjunto de todas las funciones \(F(x)\) tal que \(F'(x) = f(x)\). Se escribe:</p>
+      <div class="formula-box">\[\int f(x)\,dx = F(x) + C\]</div>
+      <div class="info-box">
+        <span class="info-icon">⚠️</span>
+        <p>La constante \(C\) (constante de integración) es obligatoria en toda integral indefinida, ya que la derivada de cualquier constante es 0.</p>
+      </div>
+      <h3>Interpretación geométrica</h3>
+      <p>La integral indefinida representa una <em>familia de curvas</em>, todas con la misma forma pero desplazadas verticalmente según el valor de \(C\).</p>
+      <h3>Ejemplo paso a paso</h3>
+      <div class="step-example">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div>
+            <p><strong>Problema:</strong> Calcular \(\int 3x^2\,dx\)</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div>
+            <p><strong>Aplicar regla de potencias:</strong> \(\int x^n\,dx = \dfrac{x^{n+1}}{n+1} + C\)</p>
+            <p>Con \(n = 2\): \(\int 3x^2\,dx = 3 \cdot \dfrac{x^3}{3} + C\)</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div>
+            <p><strong>Simplificar:</strong> \(\int 3x^2\,dx = x^3 + C\)</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">4</span>
+          <div>
+            <p><strong>Verificar:</strong> Derivar el resultado: \(\dfrac{d}{dx}(x^3 + C) = 3x^2\) ✓</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Definida -->
+  <div id="tab-definida" class="tab-content">
+    <div class="theory-block">
+      <h3>Integral Definida</h3>
+      <p>La integral definida calcula el <strong>área neta</strong> bajo la curva de \(f(x)\) desde \(x = a\) hasta \(x = b\):</p>
+      <div class="formula-box">\[\int_a^b f(x)\,dx = F(b) - F(a)\]</div>
+      <h3>Notación de Leibniz</h3>
+      <p>El resultado \(F(b) - F(a)\) se escribe frecuentemente como:</p>
+      <div class="formula-box">\[\Big[F(x)\Big]_a^b = F(b) - F(a)\]</div>
+      <h3>Ejemplo paso a paso</h3>
+      <div class="step-example">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div><p><strong>Problema:</strong> Calcular \(\displaystyle\int_1^3 (2x + 1)\,dx\)</p></div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div>
+            <p><strong>Hallar la antiderivada:</strong></p>
+            <p>\(F(x) = x^2 + x\) (sin constante, pues se cancela)</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div>
+            <p><strong>Evaluar en los límites:</strong></p>
+            <p>\(F(3) = 9 + 3 = 12\)</p>
+            <p>\(F(1) = 1 + 1 = 2\)</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">4</span>
+          <div>
+            <p><strong>Restar:</strong> \(\int_1^3 (2x+1)\,dx = F(3) - F(1) = 12 - 2 = \mathbf{10}\)</p>
+          </div>
+        </div>
+      </div>
+      <div class="info-box">
+        <span class="info-icon">💡</span>
+        <p>Si \(f(x) \geq 0\) en \([a,b]\), la integral definida es igual al área (positiva) bajo la curva. Si \(f(x) &lt; 0\), la integral es negativa.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Reglas -->
+  <div id="tab-reglas" class="tab-content">
+    <div class="theory-block">
+      <h3>Reglas Básicas de Integración</h3>
+      <div class="rules-grid">
+        <div class="rule-card">
+          <div class="rule-name">Constante</div>
+          <div class="formula-box small">\[\int k\,dx = kx + C\]</div>
+          <div class="rule-ex">Ej: \(\int 5\,dx = 5x + C\)</div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-name">Potencia</div>
+          <div class="formula-box small">\[\int x^n\,dx = \frac{x^{n+1}}{n+1} + C \quad (n \neq -1)\]</div>
+          <div class="rule-ex">Ej: \(\int x^4\,dx = \dfrac{x^5}{5} + C\)</div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-name">Múltiplo constante</div>
+          <div class="formula-box small">\[\int k\cdot f(x)\,dx = k\int f(x)\,dx\]</div>
+          <div class="rule-ex">Ej: \(\int 3x^2\,dx = 3\int x^2\,dx = x^3 + C\)</div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-name">Suma / Resta</div>
+          <div class="formula-box small">\[\int [f \pm g]\,dx = \int f\,dx \pm \int g\,dx\]</div>
+          <div class="rule-ex">Ej: \(\int(x^2+3)\,dx = \dfrac{x^3}{3} + 3x + C\)</div>
+        </div>
+      </div>
+
+      <h3>Tabla de Integrales Comunes</h3>
+      <div class="table-container">
+        <table class="integral-table">
+          <thead>
+            <tr><th>Función \(f(x)\)</th><th>Integral \(\int f(x)\,dx\)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>\(k\) (constante)</td><td>\(kx + C\)</td></tr>
+            <tr><td>\(x^n\) (\(n \neq -1\))</td><td>\(\dfrac{x^{n+1}}{n+1} + C\)</td></tr>
+            <tr><td>\(\dfrac{1}{x}\)</td><td>\(\ln|x| + C\)</td></tr>
+            <tr><td>\(e^x\)</td><td>\(e^x + C\)</td></tr>
+            <tr><td>\(a^x\)</td><td>\(\dfrac{a^x}{\ln a} + C\)</td></tr>
+            <tr><td>\(\sin(x)\)</td><td>\(-\cos(x) + C\)</td></tr>
+            <tr><td>\(\cos(x)\)</td><td>\(\sin(x) + C\)</td></tr>
+            <tr><td>\(\sec^2(x)\)</td><td>\(\tan(x) + C\)</td></tr>
+            <tr><td>\(\dfrac{1}{\sqrt{1-x^2}}\)</td><td>\(\arcsin(x) + C\)</td></tr>
+            <tr><td>\(\dfrac{1}{1+x^2}\)</td><td>\(\arctan(x) + C\)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EJERCICIOS ═══════════════ -->
+<section id="page-ejercicios" class="page">
+  <div class="page-header">
+    <h2>Ejercicios de Práctica</h2>
+    <p>Selecciona la respuesta correcta. Usa la pista si la necesitas.</p>
+  </div>
+
+  <div id="exercises-container">
+    <!-- Generados por app.js -->
+  </div>
+
+  <div class="exercises-summary" id="exercises-summary" style="display:none">
+    <div class="summary-icon">🎉</div>
+    <h3 id="summary-title"></h3>
+    <p id="summary-msg"></p>
+    <button class="btn btn-primary" onclick="resetExercises()">Intentar de nuevo</button>
+  </div>
+</section>
+
+<!-- ═══════════════ JUEGO ═══════════════ -->
+<section id="page-juego" class="page">
+
+  <!-- LOGIN -->
+  <div id="game-login" class="game-screen active">
+    <div class="game-card">
+      <div class="game-logo">🏆</div>
+      <h2>Juego de Integrales</h2>
+      <p class="game-subtitle">5 preguntas · Tiempo limitado · Puntos por velocidad</p>
+
+      <div class="form-group">
+        <label>Tu nombre</label>
+        <input type="text" id="input-name" placeholder="Ej: María García" maxlength="20" />
+      </div>
+
+      <div class="login-btns">
+        <button class="btn btn-primary" onclick="showCreateRoom()">Crear Sala</button>
+        <button class="btn btn-outline" onclick="showJoinRoom()">Unirse a Sala</button>
+      </div>
+      <div class="divider"><span>o</span></div>
+      <button class="btn btn-ghost" onclick="startPractice()">Modo Práctica (sin servidor)</button>
+
+      <div id="ws-status" class="ws-status"></div>
+    </div>
+  </div>
+
+  <!-- UNIRSE A SALA -->
+  <div id="game-join" class="game-screen">
+    <div class="game-card">
+      <button class="back-btn" onclick="showScreen('game-login')">← Volver</button>
+      <div class="game-logo">🔑</div>
+      <h2>Unirse a Sala</h2>
+      <div class="form-group">
+        <label>Código de sala (5 caracteres)</label>
+        <input type="text" id="input-code" placeholder="Ej: AB3K7" maxlength="5"
+               style="text-transform:uppercase;letter-spacing:0.3rem;font-size:1.4rem;text-align:center"/>
+      </div>
+      <button class="btn btn-primary" onclick="joinRoom()">Unirse</button>
+      <p id="join-error" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- SALA DE ESPERA -->
+  <div id="game-lobby" class="game-screen">
+    <div class="game-card">
+      <h2>Sala de Espera</h2>
+      <div class="room-code-display">
+        <p class="room-code-label">Código de sala:</p>
+        <div class="room-code" id="display-code">—</div>
+        <p class="room-code-hint">Comparte este código con tus compañeros</p>
+      </div>
+      <div class="players-list-container">
+        <h4>Jugadores conectados:</h4>
+        <ul id="lobby-players" class="players-list"></ul>
+      </div>
+      <button id="btn-start" class="btn btn-primary" onclick="startGame()" style="display:none">
+        Iniciar Juego
+      </button>
+      <p id="waiting-msg" class="waiting-text">Esperando que el anfitrión inicie...</p>
+    </div>
+  </div>
+
+  <!-- CUENTA REGRESIVA -->
+  <div id="game-countdown" class="game-screen">
+    <div class="countdown-display">
+      <p>¡El juego comienza!</p>
+      <div class="countdown-num" id="countdown-num">3</div>
+    </div>
+  </div>
+
+  <!-- PREGUNTA -->
+  <div id="game-question" class="game-screen">
+    <div class="question-layout">
+      <div class="question-top">
+        <div class="q-progress">
+          <span id="q-num">Pregunta 1/5</span>
+          <div class="timer-bar-wrap">
+            <div class="timer-bar" id="timer-bar"></div>
+          </div>
+          <span id="timer-text" class="timer-text">30s</span>
+        </div>
+      </div>
+      <div class="question-main">
+        <div class="question-formula" id="question-formula"></div>
+        <div class="options-grid" id="options-grid"></div>
+        <p id="answer-ack-msg" class="answer-ack-msg" style="display:none">✓ Respuesta registrada — puedes cambiarla antes de que termine el tiempo</p>
+      </div>
+      <div class="question-sidebar">
+        <h4>Puntuación</h4>
+        <ul id="live-scores" class="scores-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESPUESTA REVELADA -->
+  <div id="game-reveal" class="game-screen">
+    <div class="reveal-card">
+      <div id="reveal-result-icon" class="reveal-icon"></div>
+      <h3 id="reveal-result-text"></h3>
+      <div class="reveal-formula" id="reveal-formula"></div>
+      <div class="reveal-explanation" id="reveal-explanation"></div>
+      <div class="reveal-scoreboard">
+        <h4>Puntuación actual</h4>
+        <ul id="reveal-scores" class="scores-list"></ul>
+      </div>
+      <p class="next-hint" id="next-hint">Siguiente pregunta en <span id="next-countdown">4</span>s...</p>
+    </div>
+  </div>
+
+  <!-- JUEGO TERMINADO -->
+  <div id="game-finished" class="game-screen">
+    <div class="finished-card">
+      <div class="trophy-anim">🏆</div>
+      <h2>¡Juego Terminado!</h2>
+      <p class="winner-text" id="winner-text"></p>
+      <div class="final-ranking" id="final-ranking"></div>
+      <div class="finished-btns">
+        <button class="btn btn-primary" onclick="showScreen('game-login')">Jugar de nuevo</button>
+        <button class="btn btn-outline" onclick="goTo('ejercicios')">Ver ejercicios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODO PRÁCTICA -->
+  <div id="game-practice" class="game-screen">
+    <div class="question-layout">
+      <div class="question-top">
+        <div class="q-progress">
+          <span id="pq-num">Pregunta 1/5</span>
+          <div class="timer-bar-wrap">
+            <div class="timer-bar" id="p-timer-bar"></div>
+          </div>
+          <span id="p-timer-text" class="timer-text">30s</span>
+        </div>
+      </div>
+      <div class="question-main" style="max-width:700px;margin:0 auto;width:100%">
+        <p class="practice-badge">Modo Práctica · Solo</p>
+        <div class="question-formula" id="p-question-formula"></div>
+        <div class="options-grid" id="p-options-grid"></div>
+        <button id="p-confirm-btn" class="btn btn-primary confirm-answer-btn" onclick="confirmPracticeAnswer()" style="display:none">Confirmar respuesta →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÁCTICA TERMINADA -->
+  <div id="game-practice-end" class="game-screen">
+    <div class="finished-card">
+      <div class="trophy-anim" id="practice-trophy"></div>
+      <h2>¡Práctica completada!</h2>
+      <p class="winner-text" id="practice-score-text"></p>
+      <div class="practice-results" id="practice-results"></div>
+      <div class="finished-btns">
+        <button class="btn btn-primary" onclick="startPractice()">Repetir práctica</button>
+        <button class="btn btn-outline" onclick="showScreen('game-login')">Volver al menú</button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
