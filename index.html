@@ -99,7 +99,7 @@
     <div class="feature-card highlight-card" onclick="goTo('juego')">
       <div class="feature-icon">🏆</div>
       <h3>Juego Multijugador</h3>
-      <p>Conecta con tus compañeros, responde 5 preguntas en tiempo real y gana puntos por velocidad.</p>
+      <p>Conecta con tus compañeros, responde 10 preguntas en tiempo real y gana puntos por velocidad.</p>
       <span class="feature-link">Jugar ahora →</span>
     </div>
   </div>
@@ -315,7 +315,7 @@
     <div class="game-card">
       <div class="game-logo">🏆</div>
       <h2>Juego de Integrales</h2>
-      <p class="game-subtitle">5 preguntas · Tiempo limitado · Puntos por velocidad</p>
+      <p class="game-subtitle">10 preguntas · Tiempo limitado · Puntos por velocidad</p>
 
       <div class="form-group">
         <label>Tu nombre</label>
@@ -392,7 +392,11 @@
       <div class="question-main">
         <div class="question-formula" id="question-formula"></div>
         <div class="options-grid" id="options-grid"></div>
-        <p id="answer-ack-msg" class="answer-ack-msg" style="display:none">✓ Respuesta registrada — puedes cambiarla antes de que termine el tiempo</p>
+        <p id="answer-ack-msg" class="answer-ack-msg" style="display:none">✓ Respuesta registrada — puedes cambiarla o confirmar con "Listo"</p>
+        <div id="ready-area" style="display:none" class="ready-area">
+          <button id="btn-ready" class="btn btn-accent" onclick="sendReady()">✓ Listo, siguiente pregunta</button>
+          <p id="ready-status" class="ready-status"></p>
+        </div>
       </div>
       <div class="question-sidebar">
         <h4>Puntuación</h4>

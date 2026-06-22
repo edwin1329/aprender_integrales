@@ -886,6 +886,36 @@ nav { display: flex; gap: 0.25rem; }
   animation: fadeIn 0.25s ease;
 }
 
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  border-radius: var(--radius);
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-accent:hover:not(:disabled) { background: #0da271; transform: translateY(-1px); }
+.btn-accent:disabled { opacity: 0.65; cursor: default; transform: none; }
+.btn-accent.btn-ready-done { background: var(--bg3); border: 1px solid var(--accent); color: var(--accent); }
+
+.ready-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.ready-status {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
 .question-sidebar {
   background: var(--bg2);
   border: 1px solid var(--border);

@@ -86,6 +86,71 @@ const QUESTIONS = [
     explanation:
       '\\(\\int_0^1 x^2\\,dx = \\left[\\dfrac{x^3}{3}\\right]_0^1 = ' +
       '\\dfrac{1}{3} - 0 = \\dfrac{1}{3}\\)'
+  },
+  {
+    question: '\\displaystyle\\int \\sin(x) \\, dx',
+    options: [
+      '-\\cos(x) + C',
+      '\\cos(x) + C',
+      '-\\sin(x) + C',
+      '\\tan(x) + C'
+    ],
+    correct: 0,
+    explanation:
+      'La derivada de \\(-\\cos(x)\\) es \\(\\sin(x)\\), ' +
+      'por tanto \\(\\int\\sin(x)\\,dx = -\\cos(x) + C\\)'
+  },
+  {
+    question: '\\displaystyle\\int x^3 \\, dx',
+    options: [
+      '\\dfrac{x^4}{4} + C',
+      '3x^2 + C',
+      'x^4 + C',
+      '\\dfrac{x^4}{3} + C'
+    ],
+    correct: 0,
+    explanation:
+      'Regla de potencias con \\(n = 3\\): ' +
+      '\\(\\int x^3\\,dx = \\dfrac{x^{3+1}}{3+1} + C = \\dfrac{x^4}{4} + C\\)'
+  },
+  {
+    question: '\\displaystyle\\int (3x^2 + 2x) \\, dx',
+    options: [
+      'x^3 + x^2 + C',
+      '6x + 2 + C',
+      '3x^3 + x^2 + C',
+      'x^3 + 2x + C'
+    ],
+    correct: 0,
+    explanation:
+      'Integramos término a término: ' +
+      '\\(\\int 3x^2\\,dx + \\int 2x\\,dx = x^3 + x^2 + C\\)'
+  },
+  {
+    question: '\\displaystyle\\int_0^{\\pi/2} \\cos(x) \\, dx',
+    options: [
+      '1',
+      '0',
+      '-1',
+      '\\dfrac{\\pi}{2}'
+    ],
+    correct: 0,
+    explanation:
+      '\\(F(x) = \\sin(x)\\). Evaluamos: ' +
+      '\\(F(\\tfrac{\\pi}{2}) - F(0) = 1 - 0 = 1\\)'
+  },
+  {
+    question: '\\displaystyle\\int \\sec^2(x) \\, dx',
+    options: [
+      '\\tan(x) + C',
+      '\\sec(x) + C',
+      '2\\sec(x)\\tan(x) + C',
+      '-\\cot(x) + C'
+    ],
+    correct: 0,
+    explanation:
+      'La derivada de \\(\\tan(x)\\) es \\(\\sec^2(x)\\), ' +
+      'por tanto \\(\\int\\sec^2(x)\\,dx = \\tan(x) + C\\)'
   }
 ];
 
@@ -109,6 +174,7 @@ function sendQuestion(room) {
   const q = QUESTIONS[gs.currentQ];
   gs.answers = new Map();      // playerName → último índice enviado
   gs.answerTimes = new Map();  // playerName → timestamp del primer envío
+  gs.readySet = new Set();     // jugadores que pulsaron "Listo"
   gs.qStartTime = Date.now();
   gs.phase = 'question';
 
@@ -248,12 +314,36 @@ wss.on('connection', ws => {
         if (!room || !room.gameState) return;
         const gs = room.gameState;
         if (gs.phase !== 'question') return;
+        if (gs.readySet.has(playerName)) return; // ya confirmó, no puede cambiar
 
         const isFirst = !gs.answers.has(playerName);
         gs.answers.set(playerName, msg.answer);
         if (isFirst) gs.answerTimes.set(playerName, Date.now());
 
         ws.send(JSON.stringify({ type: 'answer_ack' }));
+        break;
+      }
+
+      case 'ready': {
+        if (!room || !room.gameState) return;
+        const gs = room.gameState;
+        if (gs.phase !== 'question') return;
+        if (!gs.answers.has(playerName)) return; // debe haber respondido primero
+        if (gs.readySet.has(playerName)) return;
+
+        gs.readySet.add(playerName);
+        ws.send(JSON.stringify({ type: 'ready_ack' }));
+
+        broadcast(room, {
+          type: 'ready_update',
+          readyCount: gs.readySet.size,
+          total: room.players.length
+        });
+
+        if (gs.readySet.size >= room.players.length) {
+          clearTimeout(gs.timer);
+          advanceQuestion(room);
+        }
         break;
       }
     }
@@ -278,11 +368,16 @@ wss.on('connection', ws => {
       newHost: room.host
     });
 
-    // Avanzar si todos los demás ya respondieron
+    // Avanzar si todos los demás ya respondieron o están listos
     const gs = room.gameState;
-    if (gs?.phase === 'question' && gs.answers && gs.answers.size >= room.players.length) {
-      clearTimeout(gs.timer);
-      advanceQuestion(room);
+    if (gs?.phase === 'question') {
+      if (gs.readySet && gs.readySet.size >= room.players.length) {
+        clearTimeout(gs.timer);
+        advanceQuestion(room);
+      } else if (gs.answers && gs.answers.size >= room.players.length) {
+        clearTimeout(gs.timer);
+        advanceQuestion(room);
+      }
     }
   });
 });

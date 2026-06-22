@@ -275,6 +275,36 @@ const GAME_QUESTIONS = [
     options: ['\\dfrac{1}{3}', '\\dfrac{1}{2}', '1', '\\dfrac{2}{3}'],
     correct: 0,
     explanation: '\\(\\int_0^1 x^2\\,dx = \\left[\\dfrac{x^3}{3}\\right]_0^1 = \\dfrac{1}{3}-0 = \\dfrac{1}{3}\\)'
+  },
+  {
+    question: '\\displaystyle\\int \\sin(x) \\, dx',
+    options: ['-\\cos(x)+C', '\\cos(x)+C', '-\\sin(x)+C', '\\tan(x)+C'],
+    correct: 0,
+    explanation: 'La derivada de \\(-\\cos(x)\\) es \\(\\sin(x)\\), por tanto \\(\\int\\sin(x)\\,dx = -\\cos(x)+C\\)'
+  },
+  {
+    question: '\\displaystyle\\int x^3 \\, dx',
+    options: ['\\dfrac{x^4}{4}+C', '3x^2+C', 'x^4+C', '\\dfrac{x^4}{3}+C'],
+    correct: 0,
+    explanation: 'Regla de potencias con \\(n=3\\): \\(\\int x^3\\,dx = \\dfrac{x^4}{4}+C\\)'
+  },
+  {
+    question: '\\displaystyle\\int (3x^2 + 2x) \\, dx',
+    options: ['x^3+x^2+C', '6x+2+C', '3x^3+x^2+C', 'x^3+2x+C'],
+    correct: 0,
+    explanation: 'Integramos término a término: \\(\\int 3x^2\\,dx + \\int 2x\\,dx = x^3+x^2+C\\)'
+  },
+  {
+    question: '\\displaystyle\\int_0^{\\pi/2} \\cos(x) \\, dx',
+    options: ['1', '0', '-1', '\\dfrac{\\pi}{2}'],
+    correct: 0,
+    explanation: '\\(F(x)=\\sin(x)\\). Evaluamos: \\(F(\\tfrac{\\pi}{2})-F(0)=1-0=1\\)'
+  },
+  {
+    question: '\\displaystyle\\int \\sec^2(x) \\, dx',
+    options: ['\\tan(x)+C', '\\sec(x)+C', '2\\sec(x)\\tan(x)+C', '-\\cot(x)+C'],
+    correct: 0,
+    explanation: 'La derivada de \\(\\tan(x)\\) es \\(\\sec^2(x)\\), por tanto \\(\\int\\sec^2(x)\\,dx = \\tan(x)+C\\)'
   }
 ];
 
@@ -432,6 +462,18 @@ function handleServerMsg(msg) {
       break;
     }
 
+    case 'ready_ack': {
+      const btn = document.getElementById('btn-ready');
+      if (btn) { btn.disabled = true; btn.classList.add('btn-ready-done'); btn.textContent = '✓ ¡Listo!'; }
+      break;
+    }
+
+    case 'ready_update': {
+      const statusEl = document.getElementById('ready-status');
+      if (statusEl) statusEl.textContent = `${msg.readyCount} de ${msg.total} listos`;
+      break;
+    }
+
     case 'scores_update':
       updateLiveScores(msg.scores);
       break;
@@ -477,6 +519,13 @@ function showMultiQuestion(msg) {
   const ackEl = document.getElementById('answer-ack-msg');
   if (ackEl) ackEl.style.display = 'none';
 
+  const readyArea = document.getElementById('ready-area');
+  const btnReady = document.getElementById('btn-ready');
+  const readyStatus = document.getElementById('ready-status');
+  if (readyArea) readyArea.style.display = 'none';
+  if (btnReady) { btnReady.disabled = false; btnReady.classList.remove('btn-ready-done'); btnReady.textContent = '✓ Listo, siguiente pregunta'; }
+  if (readyStatus) readyStatus.textContent = '';
+
   document.getElementById('q-num').textContent = `Pregunta ${msg.index + 1}/${msg.total}`;
   document.getElementById('question-formula').innerHTML = `\\[${msg.question}\\]`;
   renderMath(document.getElementById('question-formula'));
@@ -512,6 +561,20 @@ function selectOption(gridId, idx) {
   document.getElementById(`${gridId}-opt-${idx}`).classList.add('selected-pending');
 
   grid._onSelect(idx);
+
+  // Mostrar botón "Listo" en modo multijugador
+  if (gridId === 'options-grid') {
+    const readyArea = document.getElementById('ready-area');
+    const btnReady = document.getElementById('btn-ready');
+    if (readyArea && btnReady && !btnReady.disabled) readyArea.style.display = '';
+  }
+}
+
+function sendReady() {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(JSON.stringify({ type: 'ready' }));
+  const btn = document.getElementById('btn-ready');
+  if (btn) { btn.disabled = true; btn.classList.add('btn-ready-done'); btn.textContent = '✓ ¡Listo!'; }
 }
 
 function lockGrid(gridId) {
